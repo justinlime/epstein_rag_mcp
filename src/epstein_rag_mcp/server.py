@@ -28,6 +28,12 @@ QDRANT_HOST = os.getenv("QDRANT_HOST", "localhost")
 QDRANT_PORT = int(os.getenv("QDRANT_PORT", "6333"))
 BATCH_SIZE = 100
 
+# Debug: Print environment variables on startup
+print(f"DEBUG: QDRANT_HOST env var = {os.getenv('QDRANT_HOST')}", file=sys.stderr)
+print(f"DEBUG: QDRANT_PORT env var = {os.getenv('QDRANT_PORT')}", file=sys.stderr)
+print(f"DEBUG: Using QDRANT_HOST = {QDRANT_HOST}", file=sys.stderr)
+print(f"DEBUG: Using QDRANT_PORT = {QDRANT_PORT}", file=sys.stderr)
+
 
 class EpsteinRAGServer:
     """RAG server for Epstein Files dataset with Qdrant vector store."""
@@ -230,6 +236,22 @@ async def main():
 
 def main_sync():
     """Synchronous entry point for console script."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Epstein Files RAG MCP Server")
+    parser.add_argument("--qdrant-host", default=os.getenv("QDRANT_HOST", "localhost"),
+                       help="Qdrant host (default: localhost)")
+    parser.add_argument("--qdrant-port", type=int, default=int(os.getenv("QDRANT_PORT", "6333")),
+                       help="Qdrant port (default: 6333)")
+    args = parser.parse_args()
+    
+    # Override global config with CLI args
+    global QDRANT_HOST, QDRANT_PORT
+    QDRANT_HOST = args.qdrant_host
+    QDRANT_PORT = args.qdrant_port
+    
+    print(f"Starting with QDRANT_HOST={QDRANT_HOST}, QDRANT_PORT={QDRANT_PORT}", file=sys.stderr)
+    
     asyncio.run(main())
 
 
