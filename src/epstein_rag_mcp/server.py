@@ -40,15 +40,6 @@ def log(message: str, level: str = "INFO"):
     print(f"[{timestamp}] [{level}] {message}", file=sys.stderr, flush=True)
 
 
-# Log startup configuration
-log("=" * 80)
-log("Epstein RAG MCP Server Starting")
-log(f"QDRANT_HOST: {QDRANT_HOST}")
-log(f"QDRANT_PORT: {QDRANT_PORT}")
-log(f"MAX_TOKENS_PER_RESULT: {MAX_TOKENS_PER_RESULT}")
-log(f"DEFAULT_QUERY_LIMIT: {DEFAULT_QUERY_LIMIT}")
-log(f"MAX_QUERY_LIMIT: {MAX_QUERY_LIMIT}")
-log("=" * 80)
 
 
 def truncate_to_tokens(text: str, max_tokens: int, encoding_name: str = "cl100k_base") -> str:
@@ -375,6 +366,7 @@ async def main():
 def main_sync():
     """Synchronous entry point for console script."""
     import argparse
+
 
     parser = argparse.ArgumentParser(description="Epstein Files RAG MCP Server")
     parser.add_argument("--qdrant-host", default=os.getenv("QDRANT_HOST", "localhost"),
